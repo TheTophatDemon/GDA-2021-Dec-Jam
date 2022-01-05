@@ -1,0 +1,170 @@
+[gd_scene load_steps=6 format=2]
+
+[ext_resource path="res://graphics/fonts/impact.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://scripts/lobby/lobby.gd" type="Script" id=2]
+[ext_resource path="res://scripts/lobby/conn_panel.gd" type="Script" id=3]
+[ext_resource path="res://scripts/lobby/lobby_panel.gd" type="Script" id=4]
+
+[sub_resource type="DynamicFont" id=1]
+size = 48
+font_data = ExtResource( 1 )
+
+[node name="Lobby" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -157.5
+margin_right = 157.5
+margin_bottom = 60.0
+custom_fonts/font = SubResource( 1 )
+text = "SNOWBALL GAME"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ConnectionPanel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -231.0
+margin_top = -66.0
+margin_right = 231.0
+margin_bottom = 66.0
+script = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="ConnectionPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 455.0
+margin_bottom = 125.0
+
+[node name="GridContainer" type="GridContainer" parent="ConnectionPanel/MarginContainer"]
+margin_right = 448.0
+margin_bottom = 118.0
+columns = 2
+
+[node name="NameLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 5.0
+margin_right = 222.0
+margin_bottom = 19.0
+text = "Player Name:"
+
+[node name="NameEdit" type="LineEdit" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_right = 448.0
+margin_bottom = 24.0
+
+[node name="IPLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 28.0
+margin_right = 222.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "IP Address"
+
+[node name="PortLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_top = 28.0
+margin_right = 448.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "Port"
+
+[node name="IPEdit" type="LineEdit" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 52.0
+margin_right = 222.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "127.0.0.1"
+
+[node name="PortEdit" type="LineEdit" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_top = 52.0
+margin_right = 448.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "25565"
+
+[node name="HostButton" type="Button" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 80.0
+margin_right = 222.0
+margin_bottom = 100.0
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_top = 80.0
+margin_right = 448.0
+margin_bottom = 100.0
+text = "Join"
+
+[node name="StatusLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 104.0
+margin_right = 222.0
+margin_bottom = 118.0
+text = "Status:"
+
+[node name="LobbyPanel" type="PanelContainer" parent="."]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -151.5
+margin_top = -145.5
+margin_right = 151.5
+margin_bottom = 145.5
+script = ExtResource( 4 )
+
+[node name="MarginContainer" type="MarginContainer" parent="LobbyPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 296.0
+margin_bottom = 284.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LobbyPanel/MarginContainer"]
+margin_right = 289.0
+margin_bottom = 277.0
+
+[node name="Label" type="Label" parent="LobbyPanel/MarginContainer/VBoxContainer"]
+margin_right = 289.0
+margin_bottom = 14.0
+text = "Players in Lobby"
+
+[node name="PlayerList" type="ItemList" parent="LobbyPanel/MarginContainer/VBoxContainer"]
+margin_top = 18.0
+margin_right = 289.0
+margin_bottom = 249.0
+size_flags_vertical = 3
+
+[node name="HSplitContainer" type="HSplitContainer" parent="LobbyPanel/MarginContainer/VBoxContainer"]
+margin_top = 253.0
+margin_right = 289.0
+margin_bottom = 277.0
+dragger_visibility = 1
+
+[node name="StartButton" type="Button" parent="LobbyPanel/MarginContainer/VBoxContainer/HSplitContainer"]
+margin_right = 83.0
+margin_bottom = 24.0
+text = "Start Game"
+
+[node name="ReadyButton" type="CheckBox" parent="LobbyPanel/MarginContainer/VBoxContainer/HSplitContainer"]
+margin_left = 95.0
+margin_right = 289.0
+margin_bottom = 24.0
+text = "Ready"

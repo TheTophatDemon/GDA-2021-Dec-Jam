@@ -1,14 +1,14 @@
 Minimum viable product:
 
-- [ ] Snowy tilemap environment
+- [x] Snowy tilemap environment
 
 - [ ] Top down movement and collision
 
 - [ ] Aiming and shooting snowballs
 
-- [ ] Connection menu
+- [x] Connection menu
 
-- [ ] Peer to peer networking
+- [x] Peer to peer networking
 
 - [ ] Player list and stats
 
