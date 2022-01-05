@@ -94,16 +94,16 @@ remotesync func setup_game(spawns):
 	var world = load("res://scenes/game.tscn").instance()
 	get_tree().root.add_child(world)
 	get_tree().root.get_node("Lobby").hide()
+	var game_node = world.get_node("Gameplay")
 	
 	#Spawn players
 	for pid in players_info:
 		var node = PLAYER_SCN.instance()
 		node.set_network_master(pid, true)
-		world.add_child(node)
-		node.name = "Player%s" % pid
-		node.call_deferred("set_player_name", players_info[pid]["name"])
-		node.position = spawns[pid]
 		node.peer_id = pid
+		game_node.add_child(node)
+		node.name = "Player%s" % pid
+		node.position = spawns[pid]
 		
 	game_started = true
 

@@ -2,7 +2,7 @@ Minimum viable product:
 
 - [x] Snowy tilemap environment
 
-- [ ] Top down movement and collision
+- [x] Top down movement and collision
 
 - [ ] Aiming and shooting snowballs
 
