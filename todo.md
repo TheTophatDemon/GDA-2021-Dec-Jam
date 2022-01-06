@@ -12,6 +12,8 @@ Minimum viable product:
 
 - [ ] World boundaries
 
+- [x] Character legs and animation
+
 - [ ] Player temperature gauge
 
 - [ ] Getting hit by snowball decreases temperature
