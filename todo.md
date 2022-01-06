@@ -4,13 +4,13 @@ Minimum viable product:
 
 - [x] Top down movement and collision
 
-- [ ] Aiming and shooting snowballs
+- [x] Aiming and shooting snowballs
 
 - [x] Connection menu
 
 - [x] Peer to peer networking
 
-- [ ] Player list and stats
+- [ ] World boundaries
 
 - [ ] Player temperature gauge
 
@@ -23,6 +23,8 @@ Minimum viable product:
 - [ ] When health depletes, player dies
 
 - [ ] Player respawns after a few seconds
+
+- [ ] Player list and stats
 
 - [ ] Player's score increases by hitting other players with snowballs
 

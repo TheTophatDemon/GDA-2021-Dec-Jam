@@ -1,6 +1,6 @@
 extends KinematicBody2D
 
-onready var sprite = $Sprite
+onready var sprite = $HeadSprite
 onready var label = $Label
 var label_offset = Vector2()
 
@@ -14,6 +14,9 @@ var motion = Vector2()
 
 var player_name = "Unnamed"
 var peer_id = 0
+
+var throw_speed = 0.5
+var throw_timer = throw_speed
 
 func _ready():
 	var _err = get_tree().connect("network_peer_disconnected", self, "_on_peer_disconnect")
@@ -29,8 +32,13 @@ func _ready():
 	remove_child(label)
 	get_node("../../HUD").add_child(label)
 	
-func _process(_delta):
+	#Mark enemy players so they get hit by snowballs
+	if not is_network_master():
+		collision_layer |= 4
+	
+func _process(delta):
 	if is_network_master():
+		#Movement
 		if Input.is_action_pressed("move_up"):
 			motion.y = -1.0
 		elif Input.is_action_pressed("move_down"):
@@ -51,6 +59,13 @@ func _process(_delta):
 		var m_pos = get_global_mouse_position()
 		rotation = atan2(m_pos.y - position.y, m_pos.x - position.x)
 		
+		#Fire snowballs
+		if Input.is_action_pressed("throw") and throw_timer <= 0.0:
+			throw_timer = throw_speed
+			rpc("throw_snowball", position, Vector2(cos(rotation), sin(rotation)), peer_id)
+		else:
+			throw_timer -= delta
+		
 		rset("puppet_motion", motion)
 		rset("puppet_pos", position)
 		rset("puppet_rotation", rotation)
@@ -70,3 +85,11 @@ func _on_peer_disconnect(id):
 		#If the peer for this player disconnected, remove the node
 		if is_instance_valid(label): label.queue_free()
 		queue_free()
+
+remotesync func throw_snowball(pos:Vector2, dir:Vector2, owner_id:int):
+	var ball = preload("res://scenes/objects/snowball.tscn").instance()
+	ball.name = "Bomb" + String(owner_id)
+	ball.direction = dir
+	ball.position = pos
+	ball.set_network_master(owner_id)
+	get_node("../").add_child(ball)
