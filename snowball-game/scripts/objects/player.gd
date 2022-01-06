@@ -1,7 +1,9 @@
 extends KinematicBody2D
 
-onready var head_sprite = $HeadSprite
+onready var body = $Body
+onready var head_sprite = $Body/HeadSprite
 onready var leg_sprite = $LegSprite
+onready var arm_sprite = $Body/ArmSprite
 onready var label = $Label
 var label_offset = Vector2()
 
@@ -19,6 +21,8 @@ var peer_id = 0
 var throw_speed = 0.25
 var throw_timer = throw_speed
 
+var balls_thrown = 0
+
 func _ready():
 	var _err = get_tree().connect("network_peer_disconnected", self, "_on_peer_disconnect")
 	puppet_pos = position
@@ -26,10 +30,13 @@ func _ready():
 	player_name = Global.players_info[peer_id]["name"]
 	label.text = player_name
 	
-	$HeadSprite/ColorSprite.modulate = Color(player_name.hash() | 0x000000FF)
+	$Body/HeadSprite/ColorSprite.modulate = Color(player_name.hash() | 0x000000FF)
 	leg_sprite.modulate = Color(player_name.to_upper().hash() | 0x000000FF)
 	leg_sprite.animation = "idle"
 	leg_sprite.playing = true
+	
+	arm_sprite.playing = true
+	arm_sprite.frame = arm_sprite.frames.get_frame_count("default")-1
 	
 	#Add label to the HUD node so it shows up over everything
 	label_offset = label.rect_position
@@ -61,22 +68,23 @@ func _process(delta):
 		
 		#Turn to face the cursor
 		var m_pos = get_global_mouse_position()
-		head_sprite.rotation = atan2(m_pos.y - position.y, m_pos.x - position.x)
+		body.rotation = atan2(m_pos.y - position.y, m_pos.x - position.x)
 		
 		#Fire snowballs
 		if Input.is_action_pressed("throw") and throw_timer <= 0.0:
 			throw_timer = throw_speed
-			rpc("throw_snowball", position, Vector2(cos(head_sprite.rotation), sin(head_sprite.rotation)), peer_id)
+			rpc("throw_snowball", balls_thrown, position, Vector2(cos(body.rotation), sin(body.rotation)), peer_id)
+			balls_thrown += 1
 		else:
 			throw_timer -= delta
 		
 		rset("puppet_motion", motion)
 		rset("puppet_pos", position)
-		rset("puppet_rotation", head_sprite.rotation)
+		rset("puppet_rotation", body.rotation)
 	else:
 		position = puppet_pos
 		motion = puppet_motion
-		head_sprite.rotation = puppet_rotation
+		body.rotation = puppet_rotation
 	
 	if not is_zero_approx(motion.length_squared()):
 		leg_sprite.animation = "walk"
@@ -96,9 +104,11 @@ func _on_peer_disconnect(id):
 		if is_instance_valid(label): label.queue_free()
 		queue_free()
 
-remotesync func throw_snowball(pos:Vector2, dir:Vector2, owner_id:int):
+remotesync func throw_snowball(index:int, pos:Vector2, dir:Vector2, owner_id:int):
+	arm_sprite.frame = 0
+	
 	var ball = preload("res://scenes/objects/snowball.tscn").instance()
-	ball.name = "Ball" + String(owner_id)
+	ball.name = "Ball" + String(owner_id) + "#" + String(index)
 	ball.direction = dir
 	ball.position = pos
 	ball.set_network_master(owner_id)

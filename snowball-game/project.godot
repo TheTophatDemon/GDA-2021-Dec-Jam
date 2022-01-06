@@ -87,6 +87,7 @@ throw={
 2d_physics/layer_1="everything"
 2d_physics/layer_2="projectiles"
 2d_physics/layer_3="opposing players"
+2d_physics/layer_4="solid environment objects"
 
 [physics]
 

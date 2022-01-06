@@ -10,13 +10,15 @@ Minimum viable product:
 
 - [x] Peer to peer networking
 
-- [ ] World boundaries
+- [x] World boundaries
 
 - [x] Character legs and animation
 
+- [x] Snowball particles
+
 - [ ] Player temperature gauge
 
-- [ ] Getting hit by snowball decreases temperature
+- [ ] Getting hit by snowball decreases temperature (and flashes player)
 
 - [ ] Snowballs cause knockback
 
@@ -35,6 +37,8 @@ Minimum viable product:
 - [ ] Player with highest score when timer runs out is declared winner
 
 Additional features:
+
+- [ ] Text chat
 
 - [ ] Settings menu to change game time
 
