@@ -36,23 +36,25 @@ func _enter_tree():
 	_err = get_tree().connect("server_disconnected", self, "_on_server_disconnected")
 
 func _on_peer_connected(id:int):
-	if get_tree().is_network_server() and game_started:
-		rpc_id(id, "reject_player")
-		peer.disconnect_peer(id)
-	else:
-		rpc_id(id, "register_player", players_info[peer.get_unique_id()])
+	if get_tree().is_network_server():
+		if game_started:
+			rpc_id(id, "reject_player")
+			peer.disconnect_peer(id)
+		else:
+			rpc_id(id, "register_player", players_info[SERVER_PID])
 
 func _on_peer_disconnect(id:int):
 	unregister_player(id)
 
 remote func reject_player():
+	players_info.clear()
 	emit_signal("connection_failure", "Game is already in progress.")
 	
 remotesync func set_ready(id, new_state:bool):
 	players_info[id]["ready"] = new_state
 	emit_signal("player_list_changed")
 	
-remotesync func register_player(info):
+remote func register_player(info):
 	var id = get_tree().get_rpc_sender_id()
 	print("Player registered: " + String(id))
 	players_info[id] = info
@@ -63,6 +65,7 @@ func unregister_player(id):
 	emit_signal("player_list_changed")
 
 func _on_connection_success():
+	rpc("register_player", players_info[peer.get_unique_id()])
 	emit_signal("connected")
 	
 func _on_connection_failure():
@@ -135,5 +138,6 @@ func join_game(name, p_ip:String, p_port:int):
 			"name": player_name,
 			"ready": false
 		}
+		emit_signal("player_list_changed")
 	else:
 		emit_signal("connection_failure")

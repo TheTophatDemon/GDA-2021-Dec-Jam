@@ -1,19 +1,29 @@
 extends KinematicBody2D
 
 onready var body = $Body
+onready var body_anim = $Body/Anim
 onready var head_sprite = $Body/HeadSprite
 onready var leg_sprite = $LegSprite
 onready var arm_sprite = $Body/ArmSprite
 onready var label = $Label
 var label_offset = Vector2()
 
+onready var throw_sound = $ThrowSound
+onready var pain_sound = $PainSound
+
 puppet var puppet_pos = Vector2()
 puppet var puppet_motion = Vector2()
 puppet var puppet_rotation = 0.0
 
 var move_speed = 256.0
+var move_accel = 2048.0
+
+var snowball_knockback = 2048.0
+
+var move_friction = 1024.0
 
 var motion = Vector2()
+var velocity = Vector2()
 
 var player_name = "Unnamed"
 var peer_id = 0
@@ -37,6 +47,8 @@ func _ready():
 	
 	arm_sprite.playing = true
 	arm_sprite.frame = arm_sprite.frames.get_frame_count("default")-1
+	
+	body_anim.play("default")
 	
 	#Add label to the HUD node so it shows up over everything
 	label_offset = label.rect_position
@@ -65,6 +77,15 @@ func _process(delta):
 			motion.x = 0.0
 			
 		motion = motion.normalized()
+		
+		#Movement speed
+		if is_zero_approx(motion.length_squared()):
+			#Friction
+			var speed = velocity.length()
+			if speed != 0.0:
+				velocity *= max(0.0, speed - move_friction * delta) / speed
+		else:
+			velocity += motion * move_accel * delta
 		
 		#Turn to face the cursor
 		var m_pos = get_global_mouse_position()
@@ -96,7 +117,10 @@ func _process(delta):
 	label.rect_position = position + label_offset
 		
 func _physics_process(_delta):
-	var _res = move_and_slide(motion * move_speed)
+	var speed = velocity.length()
+	if speed > move_speed: #Prevent velocity from exceeding maximum speed
+		velocity *= move_speed / speed
+	var _res = move_and_slide(velocity)
 
 func _on_peer_disconnect(id):
 	if id == peer_id:
@@ -104,8 +128,15 @@ func _on_peer_disconnect(id):
 		if is_instance_valid(label): label.queue_free()
 		queue_free()
 
+remotesync func _on_snowball_hit(snowball_name:String):
+	var snowball = get_node("../" + snowball_name)
+	body_anim.play("pain")
+	pain_sound.play()
+	velocity += (position - snowball.position).normalized() * snowball_knockback
+
 remotesync func throw_snowball(index:int, pos:Vector2, dir:Vector2, owner_id:int):
 	arm_sprite.frame = 0
+	throw_sound.play()
 	
 	var ball = preload("res://scenes/objects/snowball.tscn").instance()
 	ball.name = "Ball" + String(owner_id) + "#" + String(index)

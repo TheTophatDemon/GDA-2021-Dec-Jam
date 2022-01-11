@@ -25,6 +25,8 @@ func _physics_process(delta):
 		var col = move_and_collide(direction * move_speed * delta)
 		if col:
 			hit = true
+			if col.collider.has_method("_on_snowball_hit"):
+				col.collider.rpc("_on_snowball_hit", name)
 		else:
 			hit = false
 

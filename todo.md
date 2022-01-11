@@ -20,7 +20,7 @@ Minimum viable product:
 
 - [ ] Getting hit by snowball decreases temperature (and flashes player)
 
-- [ ] Snowballs cause knockback
+- [x] Snowballs cause knockback
 
 - [ ] Low temperature decreases health
 
@@ -35,6 +35,10 @@ Minimum viable product:
 - [ ] Game timer
 
 - [ ] Player with highest score when timer runs out is declared winner
+
+Bugs:
+
+- [x] After failing to connect to server, client gets added to player list anyways.
 
 Additional features:
 
