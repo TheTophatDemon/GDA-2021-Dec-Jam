@@ -16,9 +16,9 @@ Minimum viable product:
 
 - [x] Snowball particles
 
-- [ ] Player temperature gauge
+- [x] Player temperature gauge
 
-- [ ] Getting hit by snowball decreases temperature (and flashes player)
+- [x] Getting hit by snowball decreases temperature (and flashes player)
 
 - [x] Snowballs cause knockback
 
@@ -27,6 +27,8 @@ Minimum viable product:
 - [ ] When health depletes, player dies
 
 - [ ] Player respawns after a few seconds
+
+- [ ] Fireplace that restores temperature
 
 - [ ] Player list and stats
 

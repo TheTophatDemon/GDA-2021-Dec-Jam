@@ -19,6 +19,7 @@ var move_speed = 256.0
 var move_accel = 2048.0
 
 var snowball_knockback = 2048.0
+var snowball_damage = 0.05 #Percentage of temp. lost when hit by snowball
 
 var move_friction = 1024.0
 
@@ -30,6 +31,9 @@ var peer_id = 0
 
 var throw_speed = 0.25
 var throw_timer = throw_speed
+
+signal temperature_change(new_temp)
+var temperature:float = 1.0 setget set_temperature #Percentage of body heat
 
 var balls_thrown = 0
 
@@ -58,6 +62,9 @@ func _ready():
 	#Mark enemy players so they get hit by snowballs
 	if not is_network_master():
 		collision_layer |= 4
+		$Camera2D.queue_free()
+	else:
+		$Camera2D.current = true
 	
 func _process(delta):
 	if is_network_master():
@@ -127,12 +134,17 @@ func _on_peer_disconnect(id):
 		#If the peer for this player disconnected, remove the node
 		if is_instance_valid(label): label.queue_free()
 		queue_free()
+		
+func set_temperature(new_temp):
+	temperature = new_temp
+	emit_signal("temperature_change", temperature)
 
 remotesync func _on_snowball_hit(snowball_name:String):
 	var snowball = get_node("../" + snowball_name)
 	body_anim.play("pain")
 	pain_sound.play()
 	velocity += (position - snowball.position).normalized() * snowball_knockback
+	set_temperature(max(0.0, temperature - snowball_damage))
 
 remotesync func throw_snowball(index:int, pos:Vector2, dir:Vector2, owner_id:int):
 	arm_sprite.frame = 0
