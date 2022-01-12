@@ -12,7 +12,7 @@ dest_files=[ "res://.import/step_0.wav-24bc0872b4299cb6270ec119cba10ae7.sample" 
 [params]
 
 force/8_bit=false
-force/mono=false
+force/mono=true
 force/max_rate=false
 force/max_rate_hz=44100
 edit/trim=false

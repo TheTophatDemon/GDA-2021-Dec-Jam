@@ -1,4 +1,7 @@
 extends KinematicBody2D
+class_name Player
+
+const FREEZING_THRESHOLD:float = 0.3
 
 onready var body = $Body
 onready var body_anim = $Body/Anim
@@ -9,7 +12,8 @@ onready var label = $Label
 var label_offset = Vector2()
 
 onready var throw_sound = $ThrowSound
-onready var pain_sound = $PainSound
+onready var pain_sounds = $PainSounds
+onready var step_sounds = $StepSounds
 
 puppet var puppet_pos = Vector2()
 puppet var puppet_motion = Vector2()
@@ -17,11 +21,12 @@ puppet var puppet_rotation = 0.0
 
 var move_speed = 256.0
 var move_accel = 2048.0
+var move_friction = 1024.0
+var step_timer = 0.0
+var step_freq = 0.3
 
 var snowball_knockback = 2048.0
 var snowball_damage = 0.05 #Percentage of temp. lost when hit by snowball
-
-var move_friction = 1024.0
 
 var motion = Vector2()
 var velocity = Vector2()
@@ -117,6 +122,10 @@ func _process(delta):
 	if not is_zero_approx(motion.length_squared()):
 		leg_sprite.animation = "walk"
 		leg_sprite.rotation = atan2(motion.y, motion.x)
+		step_timer += delta
+		if step_timer > step_freq:
+			step_timer = 0.0
+			play_random_sound(step_sounds)
 	else:
 		leg_sprite.animation = "idle"
 	
@@ -139,10 +148,18 @@ func set_temperature(new_temp):
 	temperature = new_temp
 	emit_signal("temperature_change", temperature)
 
+func play_random_sound(parent_node:Node):
+	var idx = randi() % parent_node.get_child_count()
+	var sound:AudioStreamPlayer2D = parent_node.get_child(idx)
+	sound.pitch_scale = 1.0 - (abs(randf()) * 0.1)
+	sound.play()
+
 remotesync func _on_snowball_hit(snowball_name:String):
 	var snowball = get_node("../" + snowball_name)
 	body_anim.play("pain")
-	pain_sound.play()
+	
+	if randf() < 0.5: play_random_sound(pain_sounds)
+	
 	velocity += (position - snowball.position).normalized() * snowball_knockback
 	set_temperature(max(0.0, temperature - snowball_damage))
 
