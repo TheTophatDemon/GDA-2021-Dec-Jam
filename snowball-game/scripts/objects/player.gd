@@ -49,6 +49,7 @@ var water_damage = 1.0 #Percentage of temp. lost when in water
 var temp_regen_rate = 0.01 #Percentage of temperature regained per second
 
 signal health_change(new_health)
+signal died()
 var health:float = 1.0 setget set_health #Percentage
 var hurt_sound_timer = 0.0
 var hurt_sound_freq = 1.0
@@ -74,8 +75,8 @@ func _ready():
 	
 	body_anim.play("default")
 	
-	ground_sensor.connect("water_entered", self, "play_random_sound", [splash_sounds])
-	ground_sensor.connect("water_exited", self, "play_random_sound", [splash_sounds])
+	ground_sensor.connect("water_entered", self, "_on_water_transition")
+	ground_sensor.connect("water_exited", self, "_on_water_transition")
 	
 	#Add label to the HUD node so it shows up over everything
 	label_offset = label.rect_position
@@ -85,7 +86,7 @@ func _ready():
 	#Mark enemy players so they get hit by snowballs
 	if not is_network_master():
 		collision_layer |= 4
-		$Camera2D.queue_free()
+		$Camera2D.current = false
 	else:
 		$Camera2D.current = true
 	
@@ -125,10 +126,8 @@ func _process(delta):
 		
 		if ground_sensor.is_on_water():
 			set_temperature(temperature - water_damage * delta)
-			body.modulate = Color.blue
 		else:
 			set_temperature(temperature + temp_regen_rate * delta)
-			body.modulate = Color.white
 		
 		#Fire snowballs
 		if Input.is_action_pressed("throw") and throw_timer <= 0.0 and !ground_sensor.is_on_water():
@@ -140,6 +139,12 @@ func _process(delta):
 			
 		if temperature < FREEZING_THRESHOLD:
 			set_health(health - freeze_rate * delta)
+			
+		if Input.is_action_just_pressed("cheat_die"):
+			set_health(0.1)
+			
+		if health <= 0.0:
+			rpc("die")
 		
 		rset("puppet_motion", motion)
 		rset("puppet_pos", position)
@@ -150,7 +155,12 @@ func _process(delta):
 		motion = puppet_motion
 		body.rotation = puppet_rotation
 		health = puppet_health
-	
+		
+	if ground_sensor.is_on_water():
+		body.modulate = Color.blue
+	else:
+		body.modulate = Color.white
+
 	if not is_zero_approx(motion.length_squared()):
 		leg_sprite.animation = "walk"
 		leg_sprite.rotation = atan2(motion.y, motion.x)
@@ -179,6 +189,12 @@ func _on_peer_disconnect(id):
 		#If the peer for this player disconnected, remove the node
 		if is_instance_valid(label): label.queue_free()
 		queue_free()
+		
+func _on_water_transition():
+	var puff = preload("res://scenes/objects/puff.tscn").instance()
+	get_parent().add_child(puff)
+	puff.position = position
+	play_random_sound(splash_sounds)
 		
 func set_temperature(new_temp):
 	temperature = clamp(new_temp, 0.0, 1.0)
@@ -215,3 +231,18 @@ remotesync func throw_snowball(index:int, pos:Vector2, dir:Vector2, owner_id:int
 	ball.position = pos
 	ball.set_network_master(owner_id)
 	get_node("../").add_child(ball)
+
+remotesync func die():
+	var corpse = preload("res://scenes/objects/corpse.tscn").instance()
+	get_parent().add_child(corpse)
+	corpse.position = position
+	play_random_sound(corpse.get_node("DeathSounds"))
+	corpse.get_node("Blood").emitting = true
+	label.queue_free()
+	var cam = $Camera2D
+	var pos = cam.global_position
+	remove_child(cam)
+	get_parent().add_child(cam)
+	cam.global_position = pos
+	emit_signal("died")
+	queue_free()

@@ -26,6 +26,7 @@ var player_name:String
 
 var players_info = {}
 var game_started = false
+var num_dead = 0
 
 func _enter_tree():
 	randomize()
@@ -83,6 +84,11 @@ func _notification(what):
 		get_tree().network_peer = null
 		peer = null
 		get_tree().quit()
+		
+func _on_player_death(pid):
+	num_dead += 1
+	if num_dead >= len(players_info) - 1:
+		pass #End the game
 
 func start_game():
 	assert(get_tree().is_network_server())
@@ -98,7 +104,7 @@ remotesync func setup_game(spawns):
 	get_tree().root.add_child(world)
 	get_tree().root.get_node("Lobby").hide()
 	var game_node = world.get_node("Gameplay")
-	
+	num_dead = 0
 	#Spawn players
 	for pid in players_info:
 		var node = PLAYER_SCN.instance()
@@ -107,6 +113,7 @@ remotesync func setup_game(spawns):
 		game_node.add_child(node)
 		node.name = "Player%s" % pid
 		node.position = spawns[pid]
+		node.connect("died", self, "_on_player_death", [pid])
 		
 	game_started = true
 

@@ -28,19 +28,17 @@ Minimum viable product:
 
 - [x] Pools of cold water that players can be knocked into and die quickly
 
-- [ ] When health depletes, player dies
+- [x] When health depletes, player dies
 
-- [ ] Player respawns after a few seconds
+- [ ] Player goes into spectator mode after dying
+
+- [ ] Last player standing wins the game
 
 - [ ] Fireplace that restores temperature
 
-- [ ] Player list and stats
+- [ ] Player list
 
-- [ ] Player's score increases by hitting other players with snowballs
-
-- [ ] Game timer
-
-- [ ] Player with highest score when timer runs out is declared winner
+- [ ] Full map (randomly generated?)
 
 Bugs:
 

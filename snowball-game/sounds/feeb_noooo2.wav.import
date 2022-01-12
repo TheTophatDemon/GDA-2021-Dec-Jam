@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/feeb_noooo2.wav-f83f4b4790457735ab633c79682b9f11.sample"
+
+[deps]
+
+source_file="res://sounds/feeb_noooo2.wav"
+dest_files=[ "res://.import/feeb_noooo2.wav-f83f4b4790457735ab633c79682b9f11.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

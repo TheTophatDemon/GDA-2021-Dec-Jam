@@ -36,6 +36,24 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Credits" type="Label" parent="Title"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -400.0
+margin_top = 61.0
+margin_right = 397.0
+margin_bottom = 87.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 3
+custom_fonts/font = SubResource( 1 )
+text = "Made by The Tophat Demon, with music from [INSERT_NAME]"
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="Description" type="Label" parent="."]
 anchor_top = 1.0
 anchor_right = 1.0
