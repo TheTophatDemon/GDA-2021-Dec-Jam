@@ -22,7 +22,11 @@ Minimum viable product:
 
 - [x] Snowballs cause knockback
 
-- [ ] Low temperature decreases health
+- [x] Low temperature decreases health
+
+- [x] Slippery ice floors
+
+- [x] Pools of cold water that players can be knocked into and die quickly
 
 - [ ] When health depletes, player dies
 
@@ -47,7 +51,3 @@ Additional features:
 - [ ] Text chat
 
 - [ ] Settings menu to change game time
-
-- [ ] Slippery ice floors
-
-- [ ] Pools of cold water that players can be knocked into and die quickly

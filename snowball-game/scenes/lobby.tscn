@@ -1,13 +1,19 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://graphics/fonts/impact.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://scripts/lobby/lobby.gd" type="Script" id=2]
 [ext_resource path="res://scripts/lobby/conn_panel.gd" type="Script" id=3]
 [ext_resource path="res://scripts/lobby/lobby_panel.gd" type="Script" id=4]
+[ext_resource path="res://graphics/fonts/comici.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="DynamicFont" id=2]
+size = 48
+outline_size = 4
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=1]
-size = 48
-font_data = ExtResource( 1 )
+font_data = ExtResource( 5 )
 
 [node name="Lobby" type="Control"]
 anchor_right = 1.0
@@ -17,15 +23,51 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="."]
+[node name="Title" type="Label" parent="."]
 anchor_left = 0.5
 anchor_right = 0.5
 margin_left = -157.5
 margin_right = 157.5
 margin_bottom = 60.0
-custom_fonts/font = SubResource( 1 )
-text = "SNOWBALL GAME"
+custom_fonts/font = SubResource( 2 )
+text = "FROZEN FEEBS"
 align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Description" type="Label" parent="."]
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -88.0
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 3
+custom_fonts/font = SubResource( 1 )
+text = "A \"Feeb\" is tiny, gremlin-like creature found in North America and Southern China that is notoriously bad at video games. They are known to be passive and quite generous towards other creatures, but sometimes not towards themselves (particularly when playing this game)."
+align = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Instructions" type="Label" parent="."]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -63.5
+margin_right = 141.0
+margin_bottom = 63.5
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 2
+custom_constants/shadow_offset_y = 3
+custom_fonts/font = SubResource( 1 )
+text = "WASD: Move
+Left Click: Throw snowball
+Stay warm or die!
+Avoid water."
+align = 1
+autowrap = true
 __meta__ = {
 "_edit_use_anchors_": false
 }

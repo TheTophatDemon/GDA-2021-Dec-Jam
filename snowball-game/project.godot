@@ -20,7 +20,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Snowball Game"
+config/name="Frozen Feebs"
 run/main_scene="res://scenes/lobby.tscn"
 config/icon="res://icon.png"
 
@@ -98,6 +98,8 @@ throw={
 2d_physics/layer_2="projectiles"
 2d_physics/layer_3="opposing players"
 2d_physics/layer_4="solid environment objects"
+2d_physics/layer_5="ice"
+2d_physics/layer_6="water"
 
 [physics]
 
