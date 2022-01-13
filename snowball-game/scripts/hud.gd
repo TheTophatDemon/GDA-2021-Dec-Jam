@@ -10,8 +10,8 @@ onready var health_bar = $HealthBar/Bar
 onready var health_bar_max = health_bar.rect_size.x
 
 func _ready():
-	player.connect("temperature_change", self, "_on_temperature_change")
-	player.connect("health_change", self, "_on_health_change")
+	var _err = player.connect("temperature_change", self, "_on_temperature_change")
+	_err = player.connect("health_change", self, "_on_health_change")
 	if !is_network_master():
 		queue_free()
 	

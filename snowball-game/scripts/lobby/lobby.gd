@@ -13,6 +13,6 @@ func _on_connected():
 	conn_panel.visible = false
 	lobby_panel.visible = true
 	
-func _on_abort(_message:String):
+func _on_abort(_message:String, _priority:int):
 	conn_panel.visible = true
 	lobby_panel.visible = false

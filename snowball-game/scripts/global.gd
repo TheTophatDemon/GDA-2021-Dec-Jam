@@ -8,7 +8,7 @@ const SERVER_PID = 1
 signal connected()
 signal connection_failure()
 signal player_list_changed()
-signal abort_game(message)
+signal abort_game(message, priority)
 
 var server_ip = "127.0.0.1"
 var port = 25565
@@ -27,6 +27,8 @@ var player_name:String
 var players_info = {}
 var game_started = false
 var num_dead = 0
+
+var world:Node = null
 
 func _enter_tree():
 	randomize()
@@ -49,7 +51,7 @@ func _on_peer_disconnect(id:int):
 
 remote func reject_player():
 	players_info.clear()
-	emit_signal("connection_failure", "Game is already in progress.")
+	emit_signal("abort_game", "Game is already in progress.", 10)
 	
 remotesync func set_ready(id, new_state:bool):
 	players_info[id]["ready"] = new_state
@@ -74,7 +76,10 @@ func _on_connection_failure():
 	emit_signal("connection_failure")
 
 func _on_server_disconnected():
-	emit_signal("abort_game", "Server disconnected.")
+	if world and is_instance_valid(world):
+		world.queue_free()
+	get_tree().root.get_node("Lobby").show()
+	emit_signal("abort_game", "Server disconnected.", 0)
 
 func validate_player_name(name:String) -> String:
 	return name.trim_prefix(" ").trim_suffix(" ").validate_node_name()
@@ -85,7 +90,7 @@ func _notification(what):
 		peer = null
 		get_tree().quit()
 		
-func _on_player_death(pid):
+func _on_player_death(_pid):
 	num_dead += 1
 	if num_dead >= len(players_info) - 1:
 		pass #End the game
@@ -100,7 +105,7 @@ func start_game():
 	rpc("setup_game", spawns)
 	
 remotesync func setup_game(spawns):
-	var world = load("res://scenes/game.tscn").instance()
+	world = load("res://scenes/game.tscn").instance()
 	get_tree().root.add_child(world)
 	get_tree().root.get_node("Lobby").hide()
 	var game_node = world.get_node("Gameplay")

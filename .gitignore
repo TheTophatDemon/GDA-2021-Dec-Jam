@@ -2,3 +2,5 @@
 *.md5
 *.stex
 *.bak
+*.sfk
+/builds

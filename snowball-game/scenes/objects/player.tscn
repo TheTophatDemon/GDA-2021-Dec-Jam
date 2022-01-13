@@ -1,4 +1,4 @@
-[gd_scene load_steps=42 format=2]
+[gd_scene load_steps=43 format=2]
 
 [ext_resource path="res://graphics/player/player_head.png" type="Texture" id=1]
 [ext_resource path="res://scripts/objects/player.gd" type="Script" id=2]
@@ -135,6 +135,21 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ), Color( 0.0313726, 0, 0.607843, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
+[sub_resource type="Animation" id=24]
+resource_name = "underwater"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 0.0313726, 0, 0.607843, 1 ) ]
+}
+
 [sub_resource type="CircleShape2D" id=1]
 radius = 16.0312
 
@@ -175,6 +190,7 @@ texture = ExtResource( 4 )
 anims/RESET = SubResource( 20 )
 anims/default = SubResource( 22 )
 anims/pain = SubResource( 21 )
+anims/underwater = SubResource( 24 )
 
 [node name="Shape" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )

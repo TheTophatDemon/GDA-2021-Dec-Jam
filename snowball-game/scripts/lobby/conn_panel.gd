@@ -6,6 +6,7 @@ onready var ip_edit = $MarginContainer/GridContainer/IPEdit
 onready var port_edit = $MarginContainer/GridContainer/PortEdit
 onready var name_edit = $MarginContainer/GridContainer/NameEdit
 onready var status_label = $MarginContainer/GridContainer/StatusLabel
+var status_priority = 0
 
 func _ready():
 	name_edit.text = Global.AUTO_NAMES[randi() % len(Global.AUTO_NAMES)]
@@ -14,28 +15,38 @@ func _ready():
 	_err = Global.connect("abort_game", self, "_on_abort")
 
 func start_connection():
+	freeze()
+	status_label.text = "Status: Connecting..."
+	status_priority = 0
+	#The lobby script will handle connection success by switching screens
+	yield(Global, "connection_failure")
+	status_label.text = "Status: Connection failed."
+	unfreeze()
+	
+func freeze():
 	host_button.disabled = true
 	join_button.disabled = true
 	name_edit.editable = false
 	ip_edit.editable = false
 	port_edit.editable = false
-	status_label.text = "Status: Connecting..."
-	#The lobby script will handle connection success by switching screens
-	yield(Global, "connection_failure")
+	
+func unfreeze():
 	host_button.disabled = false
 	join_button.disabled = false
 	name_edit.editable = true
 	ip_edit.editable = true
 	port_edit.editable = true
-	status_label.text = "Status: Connection failed."
 
-func _on_abort(message:String):
-	status_label.text = message
+func _on_abort(message:String, priority:int):
+	if priority >= status_priority:
+		status_label.text = message
+		status_priority = priority
+	unfreeze()
 
 func _on_host_button_press():
 	if port_edit.text.is_valid_integer():
-		start_connection()
 		Global.host_game(name_edit.text, int(port_edit.text))
+		start_connection()
 	else:
 		status_label.text = "Invalid port..."
 	

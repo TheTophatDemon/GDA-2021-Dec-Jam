@@ -10,11 +10,12 @@ var hit = false
 func _ready():
 	puppet_position = position
 
-func _process(delta):
+func _process(_delta):
 	if is_network_master():
 		if hit or life_timer > 10.0:
 			rpc("die")
-		rset("puppet_position", position)
+			return
+		rset_unreliable("puppet_position", position)
 	else:
 		position = puppet_position
 

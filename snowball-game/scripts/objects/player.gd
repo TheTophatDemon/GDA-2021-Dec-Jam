@@ -142,13 +142,15 @@ func _process(delta):
 			
 		if Input.is_action_just_pressed("cheat_die"):
 			set_health(0.1)
+			body_anim.play("pain")
 			
 		if health <= 0.0:
 			rpc("die")
+			return
 		
-		rset("puppet_motion", motion)
-		rset("puppet_pos", position)
-		rset("puppet_rotation", body.rotation)
+		rset_unreliable("puppet_motion", motion)
+		rset_unreliable("puppet_pos", position)
+		rset_unreliable("puppet_rotation", body.rotation)
 		rset("puppet_health", health)
 	else:
 		position = puppet_pos
@@ -157,9 +159,9 @@ func _process(delta):
 		health = puppet_health
 		
 	if ground_sensor.is_on_water():
-		body.modulate = Color.blue
-	else:
-		body.modulate = Color.white
+		body_anim.play("underwater")
+	elif !body_anim.playback_active:
+		body_anim.play("default")
 
 	if not is_zero_approx(motion.length_squared()):
 		leg_sprite.animation = "walk"
@@ -238,6 +240,7 @@ remotesync func die():
 	corpse.position = position
 	play_random_sound(corpse.get_node("DeathSounds"))
 	corpse.get_node("Blood").emitting = true
+	corpse.rotation = rand_range(0.0, 2.0 * PI)
 	label.queue_free()
 	var cam = $Camera2D
 	var pos = cam.global_position

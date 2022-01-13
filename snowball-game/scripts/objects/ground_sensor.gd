@@ -17,8 +17,8 @@ func is_on_water() -> bool:
 	return n_water_bodies > 0
 
 func _ready():
-	connect("body_entered", self, "_on_body_enter")
-	connect("body_exited", self, "_on_body_exit")
+	var _err = connect("body_entered", self, "_on_body_enter")
+	_err = connect("body_exited", self, "_on_body_exit")
 	
 func _on_body_enter(body):
 	if (body.collision_layer & ICE_LAYER) > 0:

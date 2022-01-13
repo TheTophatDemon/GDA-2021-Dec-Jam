@@ -40,9 +40,19 @@ Minimum viable product:
 
 - [ ] Full map (randomly generated?)
 
-Bugs:
+Tweaks:
 
-- [x] After failing to connect to server, client gets added to player list anyways.
+- [x] Replace rpc with rpc_unreliable to optimize
+
+- [x] Make skeletons random rotation
+
+- [x] Fix snowball packet not found error
+
+- [x] Fix pain flash not playing
+
+- [x] Exit from game when server disconnects
+
+- [ ] Fix extraneous names on failed/severed connection (for future server)
 
 Additional features:
 
