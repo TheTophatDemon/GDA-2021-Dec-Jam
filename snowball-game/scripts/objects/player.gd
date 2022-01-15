@@ -21,6 +21,7 @@ puppet var puppet_pos = Vector2()
 puppet var puppet_motion = Vector2()
 puppet var puppet_rotation = 0.0
 puppet var puppet_health = 1.0
+puppet var puppet_temp = 1.0
 
 var move_speed = 256.0
 var move_accel = 2048.0
@@ -83,10 +84,10 @@ func _ready():
 	remove_child(label)
 	get_node("../../HUD").add_child(label)
 	
-	#Mark enemy players so they get hit by snowballs
 	if not is_network_master():
-		collision_layer |= 4
+		collision_layer |= 4 #Mark enemy players so they get hit by our snowballs
 		$Camera2D.current = false
+		$Camera2D.visible = false
 	else:
 		$Camera2D.current = true
 	
@@ -152,15 +153,19 @@ func _process(delta):
 		rset_unreliable("puppet_pos", position)
 		rset_unreliable("puppet_rotation", body.rotation)
 		rset("puppet_health", health)
+		rset("puppet_temp", temperature)
 	else:
 		position = puppet_pos
 		motion = puppet_motion
 		body.rotation = puppet_rotation
 		health = puppet_health
+		emit_signal("health_change", health)
+		temperature = puppet_temp
+		emit_signal("temperature_change", temperature)
 		
 	if ground_sensor.is_on_water():
 		body_anim.play("underwater")
-	elif !body_anim.playback_active:
+	elif body_anim.current_animation != "pain":
 		body_anim.play("default")
 
 	if not is_zero_approx(motion.length_squared()):
@@ -239,13 +244,12 @@ remotesync func die():
 	get_parent().add_child(corpse)
 	corpse.position = position
 	play_random_sound(corpse.get_node("DeathSounds"))
-	corpse.get_node("Blood").emitting = true
-	corpse.rotation = rand_range(0.0, 2.0 * PI)
 	label.queue_free()
 	var cam = $Camera2D
 	var pos = cam.global_position
 	remove_child(cam)
-	get_parent().add_child(cam)
+	corpse.add_child(cam)
+	corpse.set_network_master(peer_id, true)
 	cam.global_position = pos
 	emit_signal("died")
 	queue_free()

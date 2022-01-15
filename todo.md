@@ -30,7 +30,7 @@ Minimum viable product:
 
 - [x] When health depletes, player dies
 
-- [ ] Player goes into spectator mode after dying
+- [x] Player goes into spectator mode after dying
 
 - [ ] Last player standing wins the game
 
@@ -52,7 +52,9 @@ Tweaks:
 
 - [x] Exit from game when server disconnects
 
-- [ ] Fix extraneous names on failed/severed connection (for future server)
+- [x] Fix extraneous names on failed/severed connection (for future server)
+
+- [ ] Fix ready button being checked after being disconnected
 
 Additional features:
 

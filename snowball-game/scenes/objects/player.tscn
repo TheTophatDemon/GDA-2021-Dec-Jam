@@ -1,4 +1,4 @@
-[gd_scene load_steps=43 format=2]
+[gd_scene load_steps=45 format=2]
 
 [ext_resource path="res://graphics/player/player_head.png" type="Texture" id=1]
 [ext_resource path="res://scripts/objects/player.gd" type="Script" id=2]
@@ -22,6 +22,7 @@
 [ext_resource path="res://scripts/objects/ground_sensor.gd" type="Script" id=20]
 [ext_resource path="res://sounds/splash2.wav" type="AudioStream" id=21]
 [ext_resource path="res://sounds/splash.wav" type="AudioStream" id=22]
+[ext_resource path="res://graphics/fonts/impact.ttf" type="DynamicFontData" id=23]
 
 [sub_resource type="AtlasTexture" id=3]
 atlas = ExtResource( 5 )
@@ -158,10 +159,16 @@ outline_size = 2
 outline_color = Color( 0, 0, 0, 1 )
 font_data = ExtResource( 3 )
 
+[sub_resource type="DynamicFont" id=25]
+size = 32
+outline_size = 2
+outline_color = Color( 0, 0, 0, 1 )
+font_data = ExtResource( 23 )
+
 [sub_resource type="CircleShape2D" id=23]
 radius = 13.0384
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="KinematicBody2D" groups=["players"]]
 script = ExtResource( 2 )
 
 [node name="LegSprite" type="AnimatedSprite" parent="."]
@@ -335,6 +342,18 @@ margin_top = 3.0
 margin_right = 221.0
 margin_bottom = 13.0
 color = Color( 0.0313726, 0.807843, 0.0627451, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="SpectatorLabel" type="Label" parent="Camera2D/HUD"]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -72.5
+margin_right = 72.5
+margin_bottom = 40.0
+custom_fonts/font = SubResource( 25 )
+text = "Spectating"
 __meta__ = {
 "_edit_use_anchors_": false
 }

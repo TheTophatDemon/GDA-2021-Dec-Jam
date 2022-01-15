@@ -12,8 +12,8 @@ onready var health_bar_max = health_bar.rect_size.x
 func _ready():
 	var _err = player.connect("temperature_change", self, "_on_temperature_change")
 	_err = player.connect("health_change", self, "_on_health_change")
-	if !is_network_master():
-		queue_free()
+	if is_network_master():
+		$SpectatorLabel.visible = false
 	
 func _on_temperature_change(new_temp:float):
 	mercury.rect_size.y = mercury_max_height * new_temp

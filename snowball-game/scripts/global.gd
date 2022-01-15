@@ -33,18 +33,10 @@ var world:Node = null
 func _enter_tree():
 	randomize()
 	var _err = get_tree().connect("network_peer_disconnected", self, "_on_peer_disconnect")
-	_err = get_tree().connect("network_peer_connected", self, "_on_peer_connected")
+	#_err = get_tree().connect("network_peer_connected", self, "_on_peer_connected")
 	_err = get_tree().connect("connected_to_server", self, "_on_connection_success")
 	_err = get_tree().connect("connection_failed", self, "_on_connection_failure")
 	_err = get_tree().connect("server_disconnected", self, "_on_server_disconnected")
-
-func _on_peer_connected(id:int):
-	if get_tree().is_network_server():
-		if game_started:
-			rpc_id(id, "reject_player")
-			peer.disconnect_peer(id)
-		else:
-			rpc_id(id, "register_player", players_info[SERVER_PID])
 
 func _on_peer_disconnect(id:int):
 	unregister_player(id)
@@ -57,9 +49,22 @@ remotesync func set_ready(id, new_state:bool):
 	players_info[id]["ready"] = new_state
 	emit_signal("player_list_changed")
 	
-remote func register_player(info):
+remote func host_register_player(info):
 	var id = get_tree().get_rpc_sender_id()
-	print("Player registered: " + String(id))
+	if game_started:
+		rpc_id(id, "reject_player")
+		peer.disconnect_peer(id)
+	else:
+		print("Player registered: " + String(id))
+		#Tell the new player about our existing players
+		for pid in players_info:
+			rpc_id(id, "peer_register_player", pid, players_info[pid])
+		players_info[id] = info
+		#Tell everyone (including the new player) about the new player
+		rpc("peer_register_player", id, info)
+		emit_signal("player_list_changed")
+	
+remote func peer_register_player(id:int, info:Dictionary):
 	players_info[id] = info
 	emit_signal("player_list_changed")
 	
@@ -68,14 +73,16 @@ func unregister_player(id):
 	emit_signal("player_list_changed")
 
 func _on_connection_success():
-	rpc("register_player", players_info[peer.get_unique_id()])
+	rpc_id(SERVER_PID, "host_register_player", new_player_info(player_name))
 	emit_signal("connected")
 	
 func _on_connection_failure():
+	players_info.clear()
 	get_tree().network_peer = null
 	emit_signal("connection_failure")
 
 func _on_server_disconnected():
+	players_info.clear()
 	if world and is_instance_valid(world):
 		world.queue_free()
 	get_tree().root.get_node("Lobby").show()
@@ -90,10 +97,10 @@ func _notification(what):
 		peer = null
 		get_tree().quit()
 		
-func _on_player_death(_pid):
+func _on_player_death(pid):
 	num_dead += 1
 	if num_dead >= len(players_info) - 1:
-		pass #End the game
+		pass
 
 func start_game():
 	assert(get_tree().is_network_server())
@@ -122,7 +129,16 @@ remotesync func setup_game(spawns):
 		
 	game_started = true
 
+func new_player_info(name:String)->Dictionary:
+	return {
+		"name": name,
+		"ready": false,
+		"wins": 0
+	}
+
 func host_game(name, p_port:int):
+	game_started = false
+	players_info.clear()
 	if validate_player_name(name).length() > 0:
 		player_name = name
 	peer = NetworkedMultiplayerENet.new()
@@ -130,14 +146,12 @@ func host_game(name, p_port:int):
 	var err = peer.create_server(port, MAX_PLAYERS)
 	if err == OK:
 		get_tree().network_peer = peer
-		players_info[SERVER_PID] = {
-			"name": name,
-			"ready": false
-		}
+		players_info[SERVER_PID] = new_player_info(name)
 		emit_signal("connected")
 		emit_signal("player_list_changed")
 
 func join_game(name, p_ip:String, p_port:int):	
+	players_info.clear()
 	if validate_player_name(name).length() > 0:
 		player_name = name
 	peer = NetworkedMultiplayerENet.new()
@@ -146,10 +160,5 @@ func join_game(name, p_ip:String, p_port:int):
 	var err = peer.create_client(p_ip, p_port)
 	if err == OK:
 		get_tree().network_peer = peer
-		players_info[peer.get_unique_id()] = {
-			"name": player_name,
-			"ready": false
-		}
-		emit_signal("player_list_changed")
 	else:
 		emit_signal("connection_failure")
