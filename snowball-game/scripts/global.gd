@@ -105,9 +105,9 @@ func _on_player_death(pid):
 					is_winner = true
 					rpc("declare_winner", pid)
 					break
-		if !is_winner:
-			#Declare a tie
-			rpc("declare_winner", 0)
+			if !is_winner:
+				#Declare a tie
+				rpc("declare_winner", 0)
 		
 
 remotesync func declare_winner(winner_pid:int):
