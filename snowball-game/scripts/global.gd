@@ -7,6 +7,7 @@ signal connected()
 signal connection_failure()
 signal player_list_changed()
 signal abort_game()
+signal game_over()
 
 var server_ip = "127.0.0.1"
 var port = 25565
@@ -93,10 +94,26 @@ func _notification(what):
 		get_tree().quit()
 		
 func _on_player_death(pid):
-	num_dead += 1
 	players_info[pid]["status"] = STATUS_DEAD
-	if num_dead >= len(players_info) - 1:
-		pass
+	num_dead += 1
+	if get_tree().is_network_server():
+		#Declare winner as the last one standing
+		var is_winner = false
+		if num_dead >= len(players_info) - 1:
+			for pid in players_info:
+				if players_info[pid]["status"] == STATUS_PLAYING:
+					is_winner = true
+					rpc("declare_winner", pid)
+					break
+		if !is_winner:
+			#Declare a tie
+			rpc("declare_winner", 0)
+		
+
+remotesync func declare_winner(winner_pid:int):
+	if winner_pid > 0:
+		players_info[winner_pid]["wins"] += 1
+	emit_signal("game_over", winner_pid)
 
 func _process(_delta):
 	if get_tree().network_peer != null and get_tree().is_network_server():

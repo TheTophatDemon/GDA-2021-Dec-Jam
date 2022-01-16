@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/tie_fanfare.wav-6e6fd21b11f87a642d1c6d7919332d6c.sample"
+
+[deps]
+
+source_file="res://sounds/tie_fanfare.wav"
+dest_files=[ "res://.import/tie_fanfare.wav-6e6fd21b11f87a642d1c6d7919332d6c.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

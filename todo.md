@@ -32,7 +32,7 @@ Minimum viable product:
 
 - [x] Player goes into spectator mode after dying
 
-- [ ] Last player standing wins the game
+- [x] Last player standing wins the game
 
 - [ ] Fireplace that restores temperature
 

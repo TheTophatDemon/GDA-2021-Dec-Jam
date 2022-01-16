@@ -43,6 +43,7 @@ func _on_start_pressed():
 	Global.setup_game()
 	
 func _on_disconnect_pressed():
+	if get_tree().is_network_server(): Global.peer.close_connection()
 	get_tree().network_peer = null
 	var _err = get_tree().change_scene("res://scenes/connection.tscn")
 	
