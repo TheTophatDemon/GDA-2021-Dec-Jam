@@ -5,7 +5,12 @@ const PLAYER_SCN = preload("res://scenes/objects/player.tscn")
 onready var gameplay_node = $Gameplay
 
 func _ready():
+	var _err = Global.connect("abort_game", self, "_on_abort")
 	Global.rpc("set_status", get_tree().get_network_unique_id(), Global.STATUS_PLAYING)
+
+func _on_abort():
+	Global.connection_status = "Server bailed on you."
+	get_tree().change_scene("res://scenes/connection.tscn")
 
 remotesync func spawn_player(pid:int, pos:Vector2):
 	var node = PLAYER_SCN.instance()

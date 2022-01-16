@@ -19,19 +19,24 @@ func set_status(message:String):
 	status_label.text = message
 
 func _ready():
-	name_edit.text = AUTO_NAMES[randi() % len(AUTO_NAMES)]
+	if len(Global.player_name) == 0 :
+		name_edit.text = AUTO_NAMES[randi() % len(AUTO_NAMES)]
+	else:
+		name_edit.text = Global.player_name
 	var _err = host_button.connect("button_down", self, "_on_host_button_press")
 	_err = join_button.connect("button_down", self, "_on_join_button_press")
 	_err = Global.connect("abort_game", self, "_on_abort")
-
-func start_connection():
-	freeze()
-	set_status("Connecting...")
-	var _err = Global.connect("connected", self, "_on_connection_success")
+	_err = Global.connect("connected", self, "_on_connection_success")
 	_err = Global.connect("connection_failure", self, "_on_connection_fail")
 	
+func start_connection():
+	freeze()
+	
+func _process(_delta):
+	set_status(Global.connection_status)
+	
 func _on_connection_success():
-	get_tree().change_scene("res://scenes/lobby.tscn")
+	var _err = get_tree().change_scene("res://scenes/lobby.tscn")
 	
 func _on_connection_fail():
 	set_status("Connection failed")
@@ -51,8 +56,7 @@ func unfreeze():
 	ip_edit.editable = true
 	port_edit.editable = true
 
-func _on_abort(message:String):
-	set_status(message)
+func _on_abort():
 	unfreeze()
 
 func validate_player_name(name:String) -> String:

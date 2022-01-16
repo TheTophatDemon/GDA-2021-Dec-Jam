@@ -8,6 +8,7 @@ var life_timer = 0.0
 var hit = false
 
 func _ready():
+	var _err = get_tree().connect("network_peer_disconnected", self, "_on_peer_disconnect")
 	puppet_position = position
 
 func _process(_delta):
@@ -30,6 +31,10 @@ func _physics_process(delta):
 				col.collider.rpc("_on_snowball_hit", name)
 		else:
 			hit = false
+			
+func _on_peer_disconnect(pid):
+	if pid == get_network_master():
+		queue_free()
 
 remotesync func die():
 	var puff = preload("res://scenes/objects/puff.tscn").instance()

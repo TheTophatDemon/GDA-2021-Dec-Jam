@@ -20,7 +20,6 @@ func _ready():
 	
 	_err = start_button.connect("button_down", self, "_on_start_pressed")
 	
-	disconnect_button.disabled = Global.game_started
 	_err = disconnect_button.connect("pressed", self, "_on_disconnect_pressed")
 	
 	music_button.pressed = get_audio_bus("Music")
@@ -45,7 +44,7 @@ func _on_start_pressed():
 	
 func _on_disconnect_pressed():
 	get_tree().network_peer = null
-	get_tree().change_scene("res://scenes/connection.tscn")
+	var _err = get_tree().change_scene("res://scenes/connection.tscn")
 	
 func set_audio_bus(new_state:bool, name:String):
 	var idx = AudioServer.get_bus_index(name)

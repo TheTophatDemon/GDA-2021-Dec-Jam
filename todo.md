@@ -36,7 +36,7 @@ Minimum viable product:
 
 - [ ] Fireplace that restores temperature
 
-- [ ] Player list
+- [x] Player list
 
 - [ ] Full map (randomly generated?)
 
@@ -54,7 +54,7 @@ Tweaks:
 
 - [x] Fix extraneous names on failed/severed connection (for future server)
 
-- [ ] Fix ready button being checked after being disconnected
+- [x] Fix ready button being checked after being disconnected
 
 Additional features:
 

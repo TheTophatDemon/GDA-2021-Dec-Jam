@@ -1,5 +1,7 @@
 extends Control
 
+const LOBBY_SCN = preload("res://scenes/lobby_panel.tscn")
+
 onready var player = get_node("../..")
 
 onready var mercury = $Thermometer/Mercury
@@ -8,6 +10,8 @@ onready var vignette = $FreezeVignette
 
 onready var health_bar = $HealthBar/Bar
 onready var health_bar_max = health_bar.rect_size.x
+
+var lobby_panel = null
 
 func _ready():
 	var _err = player.connect("temperature_change", self, "_on_temperature_change")
@@ -23,3 +27,12 @@ func _on_temperature_change(new_temp:float):
 
 func _on_health_change(new_health:float):
 	health_bar.rect_size.x = health_bar_max * new_health
+
+func _process(_delta):
+	if Input.is_action_just_pressed("menu"):
+		if !is_instance_valid(lobby_panel):
+			lobby_panel = LOBBY_SCN.instance()
+			add_child(lobby_panel)
+		else:
+			remove_child(lobby_panel)
+			lobby_panel.queue_free()
