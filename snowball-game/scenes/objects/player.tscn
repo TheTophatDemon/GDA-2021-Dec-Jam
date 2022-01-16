@@ -227,23 +227,23 @@ bus = "SFX"
 
 [node name="PainSound" type="AudioStreamPlayer2D" parent="PainSounds"]
 stream = ExtResource( 14 )
-bus = "SFX"
+bus = "Voices"
 
 [node name="PainSound2" type="AudioStreamPlayer2D" parent="PainSounds"]
 stream = ExtResource( 8 )
-bus = "SFX"
+bus = "Voices"
 
 [node name="PainSound3" type="AudioStreamPlayer2D" parent="PainSounds"]
 stream = ExtResource( 11 )
-bus = "SFX"
+bus = "Voices"
 
 [node name="PainSound4" type="AudioStreamPlayer2D" parent="PainSounds"]
 stream = ExtResource( 13 )
-bus = "SFX"
+bus = "Voices"
 
 [node name="PainSound5" type="AudioStreamPlayer2D" parent="PainSounds"]
 stream = ExtResource( 12 )
-bus = "SFX"
+bus = "Voices"
 
 [node name="SplashSounds" type="Node2D" parent="."]
 

@@ -1,26 +1,40 @@
 extends Control
 
+const AUTO_NAMES = [
+	"Gopnik", "Stinkoman", "Butt Muncher Jr.", "Sans Undertale", "The Pope", "Mr. /b/", "Christina-chan", 
+	"Killbo Fraggins", "George Washington", "Feeb", "Bakugo", "Thomas the Tank Engine", "Butt Muncher Sr.",
+	"Tony the Tiger", "Vladimir Putin", "Big Ham", "Sgt. Frog", "Deku", "Nezuko", "Rodion Raskolnikov",
+	"Quote", "Johnny Bravo", "Mr. Krabs", "Dr. Eggman", "COVID-19", "Android 18", "Hatsune Miku", "Hmph!",
+	"Literally Hitler", "Captain", "I_am_someth1ng", "Sir Truffle III", "arthurvi", "Kill me",
+]
+
 onready var host_button = $MarginContainer/GridContainer/HostButton
 onready var join_button = $MarginContainer/GridContainer/JoinButton
 onready var ip_edit = $MarginContainer/GridContainer/IPEdit
 onready var port_edit = $MarginContainer/GridContainer/PortEdit
 onready var name_edit = $MarginContainer/GridContainer/NameEdit
 onready var status_label = $MarginContainer/GridContainer/StatusLabel
-var status_priority = 0
+
+func set_status(message:String):
+	status_label.text = message
 
 func _ready():
-	name_edit.text = Global.AUTO_NAMES[randi() % len(Global.AUTO_NAMES)]
+	name_edit.text = AUTO_NAMES[randi() % len(AUTO_NAMES)]
 	var _err = host_button.connect("button_down", self, "_on_host_button_press")
 	_err = join_button.connect("button_down", self, "_on_join_button_press")
 	_err = Global.connect("abort_game", self, "_on_abort")
 
 func start_connection():
 	freeze()
-	status_label.text = "Status: Connecting..."
-	status_priority = 0
-	#The lobby script will handle connection success by switching screens
-	yield(Global, "connection_failure")
-	status_label.text = "Status: Connection failed."
+	set_status("Connecting...")
+	var _err = Global.connect("connected", self, "_on_connection_success")
+	_err = Global.connect("connection_failure", self, "_on_connection_fail")
+	
+func _on_connection_success():
+	get_tree().change_scene("res://scenes/lobby.tscn")
+	
+func _on_connection_fail():
+	set_status("Connection failed")
 	unfreeze()
 	
 func freeze():
@@ -37,22 +51,24 @@ func unfreeze():
 	ip_edit.editable = true
 	port_edit.editable = true
 
-func _on_abort(message:String, priority:int):
-	if priority >= status_priority:
-		status_label.text = message
-		status_priority = priority
+func _on_abort(message:String):
+	set_status(message)
 	unfreeze()
+
+func validate_player_name(name:String) -> String:
+	return name.trim_prefix(" ").trim_suffix(" ").validate_node_name()
 
 func _on_host_button_press():
 	if port_edit.text.is_valid_integer():
-		Global.host_game(name_edit.text, int(port_edit.text))
 		start_connection()
+		
+		Global.host_game(validate_player_name(name_edit.text), int(port_edit.text))
 	else:
 		status_label.text = "Invalid port..."
 	
 func _on_join_button_press():
 	if ip_edit.text.is_valid_ip_address() and port_edit.text.is_valid_integer():
-		Global.join_game(name_edit.text, ip_edit.text, int(port_edit.text))
 		start_connection()
+		Global.join_game(validate_player_name(name_edit.text), ip_edit.text, int(port_edit.text))
 	else:
 		status_label.text = "Invalid IP/port..."

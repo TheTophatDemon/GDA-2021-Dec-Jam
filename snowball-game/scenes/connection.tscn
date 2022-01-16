@@ -1,0 +1,116 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://graphics/fonts/title_font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://scripts/conn_panel.gd" type="Script" id=2]
+[ext_resource path="res://graphics/menu_background.tscn" type="PackedScene" id=3]
+
+[node name="ConnectionMenu" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" parent="." instance=ExtResource( 3 )]
+
+[node name="Title" type="Label" parent="."]
+anchor_left = 0.5
+anchor_right = 0.5
+margin_left = -120.0
+margin_right = 120.0
+margin_bottom = 60.0
+custom_fonts/font = ExtResource( 1 )
+text = "CONNECTION"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ConnectionPanel" type="PanelContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -231.0
+margin_top = -66.0
+margin_right = 231.0
+margin_bottom = 66.0
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="ConnectionPanel"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 455.0
+margin_bottom = 125.0
+
+[node name="GridContainer" type="GridContainer" parent="ConnectionPanel/MarginContainer"]
+margin_right = 448.0
+margin_bottom = 118.0
+columns = 2
+
+[node name="NameLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 5.0
+margin_right = 222.0
+margin_bottom = 19.0
+text = "Player Name:"
+
+[node name="NameEdit" type="LineEdit" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_right = 448.0
+margin_bottom = 24.0
+
+[node name="IPLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 28.0
+margin_right = 222.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "IP Address"
+
+[node name="PortLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_top = 28.0
+margin_right = 448.0
+margin_bottom = 48.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "Port"
+
+[node name="IPEdit" type="LineEdit" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 52.0
+margin_right = 222.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "127.0.0.1"
+
+[node name="PortEdit" type="LineEdit" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_top = 52.0
+margin_right = 448.0
+margin_bottom = 76.0
+rect_min_size = Vector2( 0, 20 )
+size_flags_horizontal = 3
+text = "25565"
+
+[node name="HostButton" type="Button" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 80.0
+margin_right = 222.0
+margin_bottom = 100.0
+text = "Host"
+
+[node name="JoinButton" type="Button" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_left = 226.0
+margin_top = 80.0
+margin_right = 448.0
+margin_bottom = 100.0
+text = "Join"
+
+[node name="StatusLabel" type="Label" parent="ConnectionPanel/MarginContainer/GridContainer"]
+margin_top = 104.0
+margin_right = 222.0
+margin_bottom = 118.0
+text = "Status"
