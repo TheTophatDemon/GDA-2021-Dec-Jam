@@ -14,11 +14,19 @@ var n_water_bodies = 0
 var n_warmth_bodies = 0
 var n_trees = 0
 
+var p_on_water = false
+
 func is_on_ice() -> bool:
 	return n_ice_bodies > 0
 
 func is_on_water() -> bool:
-	return n_water_bodies > 0
+	var on_water = n_water_bodies > 0 and n_ice_bodies == 0 #Ice overrides water for fairness' sake
+	if !p_on_water and on_water:
+		emit_signal("water_entered")
+	elif p_on_water and !on_water:
+		emit_signal("water_exited")
+	p_on_water = on_water
+	return on_water
 
 func is_on_warmth() -> bool:
 	return n_warmth_bodies > 0
@@ -37,7 +45,6 @@ func _on_enter(other):
 		n_ice_bodies += 1
 	elif (other.collision_layer & WATER_LAYER) > 0:
 		n_water_bodies += 1
-		emit_signal("water_entered")
 	elif (other.collision_layer & WARMTH_LAYER) > 0:
 		n_warmth_bodies += 1
 	elif (other.collision_layer & TREE_LAYER) > 0:
@@ -48,7 +55,6 @@ func _on_exit(other):
 		n_ice_bodies -= 1
 	elif (other.collision_layer & WATER_LAYER) > 0:
 		n_water_bodies -= 1
-		if n_water_bodies == 0: emit_signal("water_exited")
 	elif (other.collision_layer & WARMTH_LAYER) > 0:
 		n_warmth_bodies -= 1
 	elif (other.collision_layer & TREE_LAYER) > 0:

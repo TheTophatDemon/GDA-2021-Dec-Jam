@@ -47,7 +47,7 @@ var throw_timer = throw_speed
 
 signal temperature_change(new_temp)
 var temperature:float = 1.0 setget set_temperature #Percentage of body heat
-var water_damage = 1.0 #Percentage of temp. lost when in water
+var water_damage = 0.5 #Percentage of temp. lost when in water
 var temp_regen_rate = 0.01 #Percentage of temperature regained per second
 var fireplace_regen_rate = 0.2
 var fireplace_damage_rate = 0.5 #Percentage of health lost per second touching fireplace
@@ -151,6 +151,9 @@ func _process(delta):
 		if Input.is_action_just_pressed("cheat_die"):
 			set_health(0.1)
 			body_anim.play("pain")
+		elif Input.is_action_just_pressed("cheat_heal"):
+			set_health(1.0)
+			set_temperature(1.0)
 			
 		if health <= 0.0:
 			rpc("die")

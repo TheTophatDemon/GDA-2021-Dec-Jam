@@ -1,7 +1,7 @@
 [gd_resource type="TileSet" load_steps=5 format=2]
 
-[ext_resource path="res://graphics/tilesets/snow/boundary_bend.png" type="Texture" id=1]
-[ext_resource path="res://graphics/tilesets/snow/boundary.png" type="Texture" id=2]
+[ext_resource path="res://graphics/tilesets/boundary.png" type="Texture" id=1]
+[ext_resource path="res://graphics/tilesets/boundary_bend.png" type="Texture" id=2]
 
 [sub_resource type="ConvexPolygonShape2D" id=1]
 points = PoolVector2Array( 16, 4, 0, 4, 0, 0, 16, 0 )
@@ -11,7 +11,7 @@ points = PoolVector2Array( 0, 0, 16, 0, 16, 4, 8, 4, 4, 8, 4, 16, 0, 16 )
 
 [resource]
 0/name = "boundary.png 0"
-0/texture = ExtResource( 2 )
+0/texture = ExtResource( 1 )
 0/tex_offset = Vector2( 0, 0 )
 0/modulate = Color( 1, 1, 1, 1 )
 0/region = Rect2( 0, 0, 16, 16 )
@@ -32,7 +32,7 @@ points = PoolVector2Array( 0, 0, 16, 0, 16, 4, 8, 4, 4, 8, 4, 16, 0, 16 )
 } ]
 0/z_index = 0
 1/name = "boundary_bend.png 1"
-1/texture = ExtResource( 1 )
+1/texture = ExtResource( 2 )
 1/tex_offset = Vector2( 0, 0 )
 1/modulate = Color( 1, 1, 1, 1 )
 1/region = Rect2( 0, 0, 16, 16 )

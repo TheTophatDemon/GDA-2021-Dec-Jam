@@ -38,7 +38,9 @@ Minimum viable product:
 
 - [x] Player list
 
-- [ ] Full map (randomly generated?)
+- [x] Full map
+
+- [ ] Set player spawn points
 
 Tweaks:
 
@@ -56,8 +58,10 @@ Tweaks:
 
 - [x] Fix ready button being checked after being disconnected
 
+- [ ] Fix yield _on_game_over in hud.gd
+
 Additional features:
 
-- [ ] Text chat
+- [ ] Randomly generated maps
 
-- [ ] Settings menu to change game time
+- [ ] Text chat

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/water_ice_edge_horz.png-eafd78f5e554ed4fbdfe22704e9efafe.stex"
+path="res://.import/snow_tiles.png-19043deeaaac0a2a3bc1c00337c24f71.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/tilesets/snow/water_ice_edge_horz.png"
-dest_files=[ "res://.import/water_ice_edge_horz.png-eafd78f5e554ed4fbdfe22704e9efafe.stex" ]
+source_file="res://graphics/tilesets/snow_tiles.png"
+dest_files=[ "res://.import/snow_tiles.png-19043deeaaac0a2a3bc1c00337c24f71.stex" ]
 
 [params]
 

@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/water.png-8205762f09d57e0269a0c41a1fff26e9.stex"
+path="res://.import/boundary_bend.png-cc314693e0d3f1e836c3406b287753b3.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://graphics/tilesets/snow/water.png"
-dest_files=[ "res://.import/water.png-8205762f09d57e0269a0c41a1fff26e9.stex" ]
+source_file="res://graphics/tilesets/boundary_bend.png"
+dest_files=[ "res://.import/boundary_bend.png-cc314693e0d3f1e836c3406b287753b3.stex" ]
 
 [params]
 

@@ -32,6 +32,8 @@ func _on_temperature_change(new_temp:float):
 	var vignette_threshold = Player.FREEZING_THRESHOLD + 0.1
 	if new_temp < vignette_threshold:
 		vignette.modulate.a = (vignette_threshold - new_temp) / vignette_threshold
+	else:
+		vignette.modulate.a = 0.0
 
 func _on_health_change(new_health:float):
 	health_bar.rect_size.x = health_bar_max * new_health
