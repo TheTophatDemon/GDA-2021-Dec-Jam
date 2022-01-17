@@ -133,8 +133,10 @@ func setup_game():
 	
 func spawn_players():
 	var world = get_tree().root.get_node("World")
+	var spawn_order = range(MAX_PLAYERS)
+	spawn_order.shuffle()
 	for pid in players_info:
-		world.rpc("spawn_player", pid, Vector2(rand_range(4.0, 500.0), rand_range(4.0, 500.0)))
+		world.rpc("spawn_player", pid, spawn_order.pop_front())
 	
 remotesync func start_game():
 	var _err = get_tree().change_scene("res://scenes/game.tscn")

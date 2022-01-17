@@ -6,6 +6,8 @@ onready var gameplay_node = $Gameplay
 
 onready var music_player:AudioStreamPlayer = $MusicPlayer
 
+onready var spawn_points = get_tree().get_nodes_in_group("spawn_points")
+
 var win = false
 var tie = false
 var music_fade_speed:float = 20.0
@@ -16,6 +18,9 @@ func _ready():
 	var _err = Global.connect("abort_game", self, "_on_abort")
 	_err = Global.connect("game_over", self, "_on_game_over")
 	Global.rpc("set_status", get_tree().get_network_unique_id(), Global.STATUS_PLAYING)
+	
+	for s in spawn_points:
+		s.visible = false
 
 func _on_abort():
 	Global.connection_status = "Server bailed on you."
@@ -40,11 +45,11 @@ func _on_game_over(winner_pid):
 	else:
 		win = true
 
-remotesync func spawn_player(pid:int, pos:Vector2):
+remotesync func spawn_player(pid:int, spawn_index:int):
 	var node = PLAYER_SCN.instance()
 	node.set_network_master(pid, true)
 	node.peer_id = pid
 	gameplay_node.add_child(node)
 	node.name = "Player%s" % pid
-	node.position = pos
+	node.position = spawn_points[spawn_index].position
 	node.connect("died", Global, "_on_player_death", [pid])
