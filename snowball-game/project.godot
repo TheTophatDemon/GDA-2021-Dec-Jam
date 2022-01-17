@@ -112,6 +112,7 @@ menu={
 2d_physics/layer_6="water"
 2d_physics/layer_7="fire"
 2d_physics/layer_8="warmth"
+2d_physics/layer_9="tree"
 
 [physics]
 

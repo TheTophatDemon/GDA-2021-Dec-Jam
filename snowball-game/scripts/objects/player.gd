@@ -192,6 +192,8 @@ func _process(delta):
 	hurt_sound_timer += delta
 	on_fire = false
 	
+	#Hide name tag when inside of a tree
+	label.visible = !ground_sensor.is_in_tree()
 	#Make name tag follow us
 	label.rect_position = position + label_offset
 		
