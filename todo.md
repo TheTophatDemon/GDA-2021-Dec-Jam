@@ -34,7 +34,7 @@ Minimum viable product:
 
 - [x] Last player standing wins the game
 
-- [ ] Fireplace that restores temperature
+- [x] Fireplace that restores temperature
 
 - [x] Player list
 

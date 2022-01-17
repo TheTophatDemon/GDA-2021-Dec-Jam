@@ -110,6 +110,8 @@ menu={
 2d_physics/layer_4="solid environment objects"
 2d_physics/layer_5="ice"
 2d_physics/layer_6="water"
+2d_physics/layer_7="fire"
+2d_physics/layer_8="warmth"
 
 [physics]
 

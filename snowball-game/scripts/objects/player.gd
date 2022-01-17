@@ -16,6 +16,7 @@ onready var throw_sound = $ThrowSound
 onready var pain_sounds = $PainSounds
 onready var step_sounds = $StepSounds
 onready var splash_sounds = $SplashSounds
+onready var burn_sound = $BurnSound
 
 puppet var puppet_pos = Vector2()
 puppet var puppet_motion = Vector2()
@@ -48,13 +49,15 @@ signal temperature_change(new_temp)
 var temperature:float = 1.0 setget set_temperature #Percentage of body heat
 var water_damage = 1.0 #Percentage of temp. lost when in water
 var temp_regen_rate = 0.01 #Percentage of temperature regained per second
+var fireplace_regen_rate = 0.2
+var fireplace_damage_rate = 0.5 #Percentage of health lost per second touching fireplace
 
 signal health_change(new_health)
 signal died()
 var health:float = 1.0 setget set_health #Percentage
 var hurt_sound_timer = 0.0
 var hurt_sound_freq = 1.0
-
+var on_fire = false
 var freeze_rate:float = 0.1 #Percentage of health lost per second while freezing
 
 var balls_thrown = 0
@@ -127,6 +130,8 @@ func _process(delta):
 		
 		if ground_sensor.is_on_water():
 			set_temperature(temperature - water_damage * delta)
+		elif ground_sensor.is_on_warmth():
+			set_temperature(temperature + fireplace_regen_rate * delta)
 		else:
 			set_temperature(temperature + temp_regen_rate * delta)
 		
@@ -140,6 +145,8 @@ func _process(delta):
 			
 		if temperature < FREEZING_THRESHOLD:
 			set_health(health - freeze_rate * delta)
+		if on_fire:
+			set_health(health - fireplace_damage_rate * delta)
 			
 		if Input.is_action_just_pressed("cheat_die"):
 			set_health(0.1)
@@ -163,7 +170,10 @@ func _process(delta):
 		temperature = puppet_temp
 		emit_signal("temperature_change", temperature)
 		
-	if ground_sensor.is_on_water():
+	if on_fire:
+		if body_anim.current_animation != "burn": body_anim.play("burn")
+		if !burn_sound.playing: burn_sound.play()
+	elif ground_sensor.is_on_water():
 		body_anim.play("underwater")
 	elif body_anim.current_animation != "pain":
 		body_anim.play("default")
@@ -180,6 +190,7 @@ func _process(delta):
 		leg_sprite.animation = "idle"
 	
 	hurt_sound_timer += delta
+	on_fire = false
 	
 	#Make name tag follow us
 	label.rect_position = position + label_offset
@@ -190,6 +201,11 @@ func _physics_process(_delta):
 	if speed > max_speed: #Prevent velocity from exceeding maximum speed
 		velocity *= max_speed / speed
 	var _res = move_and_slide(velocity)
+	for i in range(get_slide_count()):
+		var col = get_slide_collision(i)
+		if (col.collider.collision_layer & 64) > 0:
+			#Get hurt by fire
+			on_fire = true
 
 func _on_peer_disconnect(id):
 	if id == peer_id:
