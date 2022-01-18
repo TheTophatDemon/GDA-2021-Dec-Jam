@@ -1,11 +1,12 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://graphics/fireplace.png" type="Texture" id=1]
-[ext_resource path="res://graphics/smoke.png" type="Texture" id=2]
+[ext_resource path="res://scenes/objects/smoke.tscn" type="PackedScene" id=2]
 [ext_resource path="res://scripts/objects/fireplace.gd" type="Script" id=3]
+[ext_resource path="res://graphics/fire_glow.png" type="Texture" id=4]
 
 [sub_resource type="CircleShape2D" id=6]
-radius = 67.1193
+radius = 86.0058
 
 [sub_resource type="Animation" id=12]
 length = 0.001
@@ -33,13 +34,25 @@ tracks/1/keys = {
 "update": 0,
 "values": [ Vector2( 1, 1 ) ]
 }
+tracks/2/type = "value"
+tracks/2/path = NodePath(".:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
 
 [sub_resource type="Animation" id=13]
 resource_name = "default"
 length = 2.0
 loop = true
 tracks/0/type = "value"
-tracks/0/path = NodePath(".:color")
+tracks/0/path = NodePath(".:scale")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -48,10 +61,10 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 1, 2 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Color( 1, 0.584314, 0, 0.552941 ), Color( 1, 0.584314, 0, 0 ), Color( 1, 0.584314, 0, 0.552941 ) ]
+"values": [ Vector2( 0.85, 0.85 ), Vector2( 0.527, 0.492 ), Vector2( 0.85, 0.85 ) ]
 }
 tracks/1/type = "value"
-tracks/1/path = NodePath(".:scale")
+tracks/1/path = NodePath(".:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/imported = false
@@ -60,7 +73,7 @@ tracks/1/keys = {
 "times": PoolRealArray( 0, 1, 2 ),
 "transitions": PoolRealArray( 1, 1, 1 ),
 "update": 0,
-"values": [ Vector2( 1.343, 1.373 ), Vector2( 0.527, 0.492 ), Vector2( 1.343, 1.373 ) ]
+"values": [ Color( 1, 1, 1, 0.509804 ), Color( 1, 1, 1, 0.133333 ), Color( 1, 1, 1, 0.509804 ) ]
 }
 
 [sub_resource type="AtlasTexture" id=1]
@@ -86,40 +99,6 @@ animations = [ {
 [sub_resource type="CircleShape2D" id=5]
 radius = 25.0799
 
-[sub_resource type="Gradient" id=7]
-offsets = PoolRealArray( 0.151613, 1 )
-colors = PoolColorArray( 0.429688, 0.429688, 0.429688, 1, 1, 1, 1, 0 )
-
-[sub_resource type="GradientTexture" id=8]
-gradient = SubResource( 7 )
-
-[sub_resource type="Curve" id=9]
-_data = [ Vector2( 0, 0.428409 ), 0.0, 0.0, 0, 0, Vector2( 1, 1 ), 0.0, 0.0, 0, 0 ]
-
-[sub_resource type="CurveTexture" id=10]
-curve = SubResource( 9 )
-
-[sub_resource type="ParticlesMaterial" id=11]
-emission_shape = 1
-emission_sphere_radius = 12.0
-flag_disable_z = true
-spread = 180.0
-gravity = Vector3( 0, 0, 0 )
-initial_velocity = 73.86
-initial_velocity_random = 0.46
-angular_velocity = 139.09
-angular_velocity_random = 1.0
-orbit_velocity = 0.0
-orbit_velocity_random = 0.0
-linear_accel = -24.89
-angle = -16.4
-angle_random = 0.89
-scale = 2.0
-scale_random = 0.34
-scale_curve = SubResource( 10 )
-color = Color( 0.537255, 0.537255, 0.537255, 0.498039 )
-color_ramp = SubResource( 8 )
-
 [node name="Fireplace" type="KinematicBody2D"]
 collision_layer = 73
 script = ExtResource( 3 )
@@ -130,9 +109,9 @@ collision_layer = 128
 [node name="CollisionShape2D" type="CollisionShape2D" parent="WarmingArea"]
 shape = SubResource( 6 )
 
-[node name="Polygon2D" type="Polygon2D" parent="WarmingArea"]
-color = Color( 1, 0.584314, 0, 0.552941 )
-polygon = PoolVector2Array( 1, -49, 15, -47, 24, -44, 33, -37, 41, -28, 44, -20, 49, -11, 50, -1, 47, 12, 45, 17, 39, 31, 30, 39, 22, 44, 14, 48, 2, 48, -2, 48, -11, 48, -18, 45, -25, 40, -34, 34, -38, 29, -44, 21, -46, 16, -48, 7, -49, -7, -48, -11, -43, -21, -40, -30, -34, -37, -27, -43, -19, -47, -8, -49 )
+[node name="Polygon2D" type="Sprite" parent="WarmingArea"]
+position = Vector2( 1, -3.49999 )
+texture = ExtResource( 4 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="WarmingArea/Polygon2D"]
 anims/RESET = SubResource( 12 )
@@ -141,15 +120,10 @@ anims/default = SubResource( 13 )
 [node name="AnimatedSprite" type="AnimatedSprite" parent="."]
 scale = Vector2( 2, 2 )
 frames = SubResource( 4 )
-frame = 1
 playing = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 5 )
 
-[node name="Smoker" type="Particles2D" parent="."]
-amount = 16
-randomness = 0.27
-visibility_rect = Rect2( -400, -240, 800, 480 )
-process_material = SubResource( 11 )
-texture = ExtResource( 2 )
+[node name="Smoke" parent="." instance=ExtResource( 2 )]
+emitting = false

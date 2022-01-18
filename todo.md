@@ -40,7 +40,7 @@ Minimum viable product:
 
 - [x] Full map
 
-- [ ] Set player spawn points
+- [x] Set player spawn points
 
 Tweaks:
 
@@ -58,7 +58,7 @@ Tweaks:
 
 - [x] Fix ready button being checked after being disconnected
 
-- [ ] Fix yield _on_game_over in hud.gd
+- [x] Fix yield _on_game_over in hud.gd
 
 Additional features:
 

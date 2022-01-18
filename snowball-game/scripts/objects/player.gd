@@ -12,11 +12,14 @@ onready var ground_sensor = $GroundSensor
 onready var label = $Label
 var label_offset = Vector2()
 
+onready var smoke = $Body/HeadSprite/Smoke
+
 onready var throw_sound = $ThrowSound
 onready var pain_sounds = $PainSounds
 onready var step_sounds = $StepSounds
 onready var splash_sounds = $SplashSounds
 onready var burn_sound = $BurnSound
+onready var hit_sound = $HitSound
 
 puppet var puppet_pos = Vector2()
 puppet var puppet_motion = Vector2()
@@ -56,8 +59,10 @@ signal health_change(new_health)
 signal died()
 var health:float = 1.0 setget set_health #Percentage
 var hurt_sound_timer = 0.0
-var hurt_sound_freq = 1.0
+var hurt_sound_freq = 2.0
 var on_fire = false
+var burn_timer = 0.0
+var burn_fadeoff = 0.5
 var freeze_rate:float = 0.1 #Percentage of health lost per second while freezing
 
 var balls_thrown = 0
@@ -174,6 +179,17 @@ func _process(delta):
 		emit_signal("temperature_change", temperature)
 		
 	if on_fire:
+		smoke.emitting = true
+		burn_timer = 0.0
+	else:
+		burn_timer += delta
+		if burn_timer > burn_fadeoff:
+			smoke.emitting = false
+			burn_sound.stop()
+		else:
+			burn_sound.volume_db -= delta
+		
+	if on_fire and burn_timer <= burn_fadeoff:
 		if body_anim.current_animation != "burn": body_anim.play("burn")
 		if !burn_sound.playing: burn_sound.play()
 	elif ground_sensor.is_on_water():
@@ -245,6 +261,8 @@ remotesync func _on_snowball_hit(snowball_name:String):
 	if hurt_sound_timer > hurt_sound_freq: 
 		play_random_sound(pain_sounds)
 		hurt_sound_timer = 0.0
+	else:
+		hit_sound.play()
 	
 	velocity += (position - snowball.position).normalized() * snowball_knockback
 	set_temperature(max(0.0, temperature - snowball_damage))

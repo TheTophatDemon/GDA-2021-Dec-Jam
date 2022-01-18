@@ -21,6 +21,7 @@ var game_started = false
 var players_spawned = false
 var num_dead = 0
 var num_playing = 0
+var host_winner_declared = false
 
 func _enter_tree():
 	randomize()
@@ -104,8 +105,9 @@ func _on_player_death(pid):
 				if players_info[pid]["status"] == STATUS_PLAYING:
 					is_winner = true
 					rpc("declare_winner", pid)
+					host_winner_declared = true
 					break
-			if !is_winner:
+			if !is_winner and !host_winner_declared:
 				#Declare a tie
 				rpc("declare_winner", 0)
 		
@@ -114,6 +116,8 @@ remotesync func declare_winner(winner_pid:int):
 	if winner_pid > 0:
 		players_info[winner_pid]["wins"] += 1
 	emit_signal("game_over", winner_pid)
+	yield(get_tree().create_timer(3.0), "timeout")
+	restart_game()
 
 func _process(_delta):
 	if get_tree().network_peer != null and get_tree().is_network_server():
@@ -129,6 +133,7 @@ func _process(_delta):
 func setup_game():
 	assert(get_tree().is_network_server())
 	players_spawned = false
+	host_winner_declared = false
 	rpc("start_game")
 	
 func spawn_players():
@@ -142,6 +147,10 @@ remotesync func start_game():
 	var _err = get_tree().change_scene("res://scenes/game.tscn")
 	num_dead = 0
 	game_started = true
+	
+func restart_game():
+	Global.rpc("set_status", get_tree().get_network_unique_id(), Global.STATUS_UNREADY)
+	var _err = get_tree().change_scene("res://scenes/lobby.tscn")
 
 func new_player_info(name:String)->Dictionary:
 	return {
